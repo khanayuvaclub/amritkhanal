@@ -371,25 +371,62 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Contact form handling
-  const contactForm = document.getElementById('contactForm');
-  if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const name = contactForm.name.value.trim();
-      const email = contactForm.email.value.trim();
-      const subject = contactForm.subject.value.trim();
-      const message = contactForm.message.value.trim();
-      let isValid = true;
-      if (!name) { isValid = false; alert('Name is required.'); contactForm.name.focus(); }
-      else if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { isValid = false; alert('Valid email is required.'); contactForm.email.focus(); }
-      else if (!subject) { isValid = false; alert('Subject is required.'); contactForm.subject.focus(); }
-      else if (!message) { isValid = false; alert('Message is required.'); contactForm.message.focus(); }
-      if (!isValid) return;
-      console.log('Form Data:', { name, email, subject, message });
-      alert(`Thank you, ${name}! Your message has been "sent".It will be reviewed shortly.`);
-      contactForm.reset();
-    });
-  }
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbx5mT10Nx5f03-POsbJdgg3OCDIbWeK5lUZ4yOpgLeqBzWyvDYLfQx3IIXMnzqzxFLbQg/exec';
+    const contactForm = document.getElementById('contactForm');
+
+    if (contactForm) {
+      contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = contactForm.name.value.trim();
+        const email = contactForm.email.value.trim();
+        const subject = contactForm.subject.value.trim();
+        const message = contactForm.message.value.trim();
+        let isValid = true;
+
+        if (!name) {
+          isValid = false;
+          alert('Name is required.');
+          contactForm.name.focus();
+        } else if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          isValid = false;
+          alert('Valid email is required.');
+          contactForm.email.focus();
+        } else if (!subject) {
+          isValid = false;
+          alert('Subject is required.');
+          contactForm.subject.focus();
+        } else if (!message) {
+          isValid = false;
+          alert('Message is required.');
+          contactForm.message.focus();
+        }
+
+        if (!isValid) return;
+
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('subject', subject);
+        formData.append('message', message);
+
+        fetch(scriptURL, { method: 'POST', body: formData })
+          .then(response => response.json())
+          .then(data => {
+            if (data.result === 'success') {
+              console.log('Form Data:', { name, email, subject, message });
+              alert(`Thank you, ${name}! Your message has been sent. It will be reviewed shortly.`);
+              contactForm.reset();
+            } else {
+              alert('Error submitting form. Please try again.');
+              console.error('Submission failed:', data.error);
+            }
+          })
+          .catch(error => {
+            alert('Error submitting form. Please try again.');
+            console.error('Error:', error.message);
+          });
+      });
+    }
 
   // Update footer year
   const yearSpan = document.getElementById('currentYear');
