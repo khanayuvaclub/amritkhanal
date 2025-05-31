@@ -371,7 +371,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Contact form handling
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwPmRPKjC4Vw-Uh4jN7w_qdLUSC1NSj2LdBoTy1k8jTfevC-jUKawts8iL6Ejya9mTDkw/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzEznaL56lNexU8RPjMZ5XKMva3RUaMlhLBcrye5pHLkoEVjaZUzHKX7oSO4sC60d-lEw/exec';
     const contactForm = document.getElementById('contactForm');
 
     if (contactForm) {
